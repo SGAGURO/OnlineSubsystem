@@ -22,4 +22,7 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float Speed;
 
+	//This is relative location from root component with 3D widget
+	UPROPERTY(EditAnywhere, Category = "TargetPoint", meta = (MakeEditWidget))
+	FVector TargetLocation;
 };
