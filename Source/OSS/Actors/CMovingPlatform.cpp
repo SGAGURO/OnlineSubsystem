@@ -6,6 +6,10 @@ ACMovingPlatform::ACMovingPlatform()
 
 	SetMobility(EComponentMobility::Movable);
 	Speed = 20.f;
+
+	//Enable Actor replicates & movement
+	bReplicates = true;
+	SetReplicateMovement(true);
 }
 
 void ACMovingPlatform::BeginPlay()
@@ -18,9 +22,13 @@ void ACMovingPlatform::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FVector CurrentLocation = GetActorLocation();
-	CurrentLocation += FVector(1, 0, 0) * Speed * DeltaTime;
+	//This platfrom will only move on the server.
+	if (HasAuthority())
+	{
+		FVector CurrentLocation = GetActorLocation();
+		CurrentLocation += FVector(1, 0, 0) * Speed * DeltaTime;
 
-	SetActorLocation(CurrentLocation);
+		SetActorLocation(CurrentLocation);
+	}
 }
 
