@@ -25,4 +25,8 @@ private:
 	//This is relative location from root component with 3D widget
 	UPROPERTY(EditAnywhere, Category = "TargetPoint", meta = (MakeEditWidget))
 	FVector TargetLocation;
+
+private:
+	FVector WorldStartLocation;
+	FVector WorldTargetLocation;
 };

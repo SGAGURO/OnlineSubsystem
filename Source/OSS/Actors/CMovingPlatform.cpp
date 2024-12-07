@@ -16,6 +16,8 @@ void ACMovingPlatform::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	WorldStartLocation = GetActorLocation();
+	WorldTargetLocation = GetTransform().TransformPosition(TargetLocation);
 }
 
 void ACMovingPlatform::Tick(float DeltaTime)
@@ -26,8 +28,17 @@ void ACMovingPlatform::Tick(float DeltaTime)
 	if (HasAuthority())
 	{
 		FVector CurrentLocation = GetActorLocation();
+
+		float TotalDistance = (WorldTargetLocation - WorldStartLocation).Size();
+		float CurrentDistance = (CurrentLocation - WorldStartLocation).Size();
 		
-		FVector WorldTargetLocation = GetTransform().TransformPosition(TargetLocation);
+		if (CurrentDistance > TotalDistance)
+		{
+			FVector Temp = WorldStartLocation;
+			WorldStartLocation = WorldTargetLocation;
+			WorldTargetLocation = Temp;
+		}
+
 		FVector Direction = (WorldTargetLocation - CurrentLocation).GetSafeNormal();
 
 		CurrentLocation += Direction * Speed * DeltaTime;
