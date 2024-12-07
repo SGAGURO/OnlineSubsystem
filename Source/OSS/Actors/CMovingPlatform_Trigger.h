@@ -5,6 +5,7 @@
 #include "CMovingPlatform_Trigger.generated.h"
 
 class UBoxComponent;
+class ACMovingPlatform;
 
 UCLASS()
 class OSS_API ACMovingPlatform_Trigger : public AActor
@@ -30,4 +31,7 @@ protected:
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
 	UBoxComponent* BoxComp;
+
+	UPROPERTY(EditInstanceOnly, Category = "PlatformsToTrigger")
+	TArray<ACMovingPlatform*> PlatformsToTrigger;
 };

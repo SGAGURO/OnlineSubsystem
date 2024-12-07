@@ -1,5 +1,6 @@
 #include "CMovingPlatform_Trigger.h"
 #include "Components/BoxComponent.h"
+#include "CMovingPlatform.h"
 
 ACMovingPlatform_Trigger::ACMovingPlatform_Trigger()
 {
@@ -22,10 +23,16 @@ void ACMovingPlatform_Trigger::BeginPlay()
 
 void ACMovingPlatform_Trigger::OnBoxBeginOverlap(AActor* OverlappedActor, AActor* OtherActor)
 {
-	UE_LOG(LogTemp, Warning, TEXT("%s is begin overlapped."), *GetNameSafe(OtherActor));
+	for (const auto& Platform : PlatformsToTrigger)
+	{
+		Platform->IncreaseActiveCount();
+	}
 }
 
 void ACMovingPlatform_Trigger::OnBoxEndOverlap(AActor* OverlappedActor, AActor* OtherActor)
 {
-	UE_LOG(LogTemp, Warning, TEXT("%s is end overlapped."), *GetNameSafe(OtherActor));
+	for (const auto& Platform : PlatformsToTrigger)
+	{
+		Platform->DecreaseActiveCount();
+	}
 }

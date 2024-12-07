@@ -18,7 +18,14 @@ protected:
 public:	
 	virtual void Tick(float DeltaTime) override;
 
+	void IncreaseActiveCount();
+	void DecreaseActiveCount();
+
 private:
+	//Disable when 0, Enable when 1 or greater than.
+	UPROPERTY(EditAnywhere, Category = "Movement")
+	int32 ActiveCount;
+
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float Speed;
 
