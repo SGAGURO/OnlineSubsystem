@@ -18,6 +18,9 @@ protected:
 public:
 	void SetOwningInstance(ICMenuInterface* InInstance);
 
+	void Startup();
+	void Shutdown();
+
 private:
 	UFUNCTION()
 	void HostServer();

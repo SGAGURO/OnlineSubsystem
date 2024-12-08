@@ -5,7 +5,7 @@
 #include "Interfaces/CMenuInterface.h"
 #include "CGameInstance.generated.h"
 
-class UUserWidget;
+class UCMainMenu;
 
 UCLASS()
 class OSS_API UCGameInstance : public UGameInstance, public ICMenuInterface
@@ -30,4 +30,6 @@ public:
 
 private:
 	TSubclassOf<UUserWidget> MainMenuWidgetClass;
+
+	UCMainMenu* MainMenu;
 };
