@@ -7,6 +7,7 @@
 #include "CGameInstance.generated.h"
 
 class UCMainMenu;
+class FOnlineSessionSearch;
 
 UCLASS()
 class OSS_API UCGameInstance : public UGameInstance, public ICMenuInterface
@@ -37,6 +38,7 @@ public:
 private:
 	void OnCreateSessionComplete(FName InSessionName, bool InSuccess);
 	void OnDestroySessionComplete(FName InSessionName, bool InSuccess);
+	void OnFindSessionsComplete(bool InSuccess);
 
 	void CreateSession();
 
@@ -47,4 +49,5 @@ private:
 	TSubclassOf<UUserWidget> PauseMenuWidgetClass;
 
 	IOnlineSessionPtr SessionInterface;
+	TSharedPtr<FOnlineSessionSearch> SessionSearch;
 };
