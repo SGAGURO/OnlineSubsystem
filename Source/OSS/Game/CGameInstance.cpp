@@ -29,4 +29,9 @@ void UCGameInstance::Join(const FString& InAddress)
 	if (!Engine) return;
 
 	Engine->AddOnScreenDebugMessage(0, 2, FColor::Green,  FString::Printf(TEXT("Join to %s"), *InAddress));
+
+	APlayerController* PC = GetFirstLocalPlayerController();
+	if (!PC) return;
+
+	PC->ClientTravel(InAddress, ETravelType::TRAVEL_Absolute);
 }
