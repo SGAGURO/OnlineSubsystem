@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Interfaces/CMenuInterface.h"
 #include "CMainMenu.generated.h"
 
 class UButton;
@@ -14,6 +15,9 @@ class OSS_API UCMainMenu : public UUserWidget
 protected:
 	virtual bool Initialize() override;
 
+public:
+	void SetOwningInstance(ICMenuInterface* InInstance);
+
 private:
 	UFUNCTION()
 	void HostServer();
@@ -25,4 +29,6 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	UButton* JoinButton;
 	
+private:
+	ICMenuInterface* OwningInstance;
 };

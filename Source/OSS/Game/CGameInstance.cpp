@@ -1,5 +1,5 @@
 #include "CGameInstance.h"
-#include "Blueprint/UserWidget.h"
+#include "UI/CMainMenu.h"
 
 UCGameInstance::UCGameInstance()
 {
@@ -21,7 +21,7 @@ void UCGameInstance::LoadMainMenu()
 {
 	if (!ensure(MainMenuWidgetClass)) return;
 
-	UUserWidget* MainMenu = CreateWidget<UUserWidget>(this, MainMenuWidgetClass);
+	UCMainMenu* MainMenu = CreateWidget<UCMainMenu>(this, MainMenuWidgetClass);
 	if (!MainMenu) return;
 
 	MainMenu->AddToViewport(10);
@@ -34,6 +34,8 @@ void UCGameInstance::LoadMainMenu()
 	APlayerController* PC = GetFirstLocalPlayerController();
 	PC->SetInputMode(InputMode);
 	PC->bShowMouseCursor = true;
+
+	MainMenu->SetOwningInstance(this);
 }
 
 void UCGameInstance::Host()

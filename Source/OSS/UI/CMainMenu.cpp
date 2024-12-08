@@ -12,7 +12,12 @@ bool UCMainMenu::Initialize()
 	return true;
 }
 
+void UCMainMenu::SetOwningInstance(ICMenuInterface* InInstance)
+{
+	OwningInstance = InInstance;
+}
+
 void UCMainMenu::HostServer()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Host Button Clicked"));
+	OwningInstance->Host();
 }
