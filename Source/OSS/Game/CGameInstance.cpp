@@ -1,4 +1,5 @@
 #include "CGameInstance.h"
+#include "OnlineSubsystem.h"
 #include "UI/CMainMenu.h"
 #include "UI/CMenuBase.h"
 
@@ -21,7 +22,21 @@ void UCGameInstance::Init()
 {
 	Super::Init();
 
-	UE_LOG(LogTemp, Warning, TEXT("Found Class %s"), *GetNameSafe(MainMenuWidgetClass));
+	IOnlineSubsystem* OSS = IOnlineSubsystem::Get();
+	if (OSS)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("OSS : %s is avaliable."), *OSS->GetSubsystemName().ToString());
+
+		IOnlineSessionPtr SessionInterface = OSS->GetSessionInterface();
+		if (SessionInterface.IsValid())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("SessionInterface is founded."));
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Not found subsystem."));
+	}
 }
 
 void UCGameInstance::LoadMainMenu()
