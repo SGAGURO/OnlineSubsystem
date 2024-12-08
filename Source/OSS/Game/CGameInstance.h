@@ -22,6 +22,9 @@ public:
 	UFUNCTION(BlueprintCallable, Exec)
 	void LoadMainMenu();
 
+	UFUNCTION(BlueprintCallable)
+	void LoadPauseMenu();
+
 	UFUNCTION(Exec)
 	void Host() override;
 
@@ -30,6 +33,7 @@ public:
 
 private:
 	TSubclassOf<UUserWidget> MainMenuWidgetClass;
-
 	UCMainMenu* MainMenu;
+
+	TSubclassOf<UUserWidget> PauseMenuWidgetClass;
 };

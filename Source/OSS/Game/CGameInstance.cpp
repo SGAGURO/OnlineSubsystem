@@ -1,5 +1,6 @@
 #include "CGameInstance.h"
 #include "UI/CMainMenu.h"
+#include "UI/CMenuBase.h"
 
 UCGameInstance::UCGameInstance()
 {
@@ -7,6 +8,12 @@ UCGameInstance::UCGameInstance()
 	if (MainMenuWidgetClass_Asset.Succeeded())
 	{
 		MainMenuWidgetClass = MainMenuWidgetClass_Asset.Class;
+	}
+
+	ConstructorHelpers::FClassFinder<UUserWidget> PauseMenuWidgetClass_Asset(TEXT("/Game/UI/WB_PauseMenu"));
+	if (PauseMenuWidgetClass_Asset.Succeeded())
+	{
+		PauseMenuWidgetClass = PauseMenuWidgetClass_Asset.Class;
 	}
 }
 
@@ -26,6 +33,17 @@ void UCGameInstance::LoadMainMenu()
 
 	MainMenu->SetOwningInstance(this);
 	MainMenu->Startup();
+}
+
+void UCGameInstance::LoadPauseMenu()
+{
+	if (!ensure(PauseMenuWidgetClass)) return;
+
+	UCMenuBase* PauseMenu = CreateWidget<UCMenuBase>(this, PauseMenuWidgetClass);
+	if (!PauseMenu) return;
+
+	PauseMenu->SetOwningInstance(this);
+	PauseMenu->Startup();
 }
 
 void UCGameInstance::Host()
