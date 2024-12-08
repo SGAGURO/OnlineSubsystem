@@ -1,5 +1,4 @@
 #include "CGameInstance.h"
-#include "Interfaces/OnlineSessionInterface.h"
 #include "OnlineSessionSettings.h"
 #include "UI/CMainMenu.h"
 #include "UI/CMenuBase.h"
@@ -36,6 +35,7 @@ void UCGameInstance::Init()
 			SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UCGameInstance::OnCreateSessionComplete);
 			SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &UCGameInstance::OnDestroySessionComplete);
 			SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UCGameInstance::OnFindSessionsComplete);
+			SessionInterface->OnJoinSessionCompleteDelegates.AddUObject(this, &UCGameInstance::OnJoinSessionComplete);
 		}
 	}
 	else
@@ -96,27 +96,17 @@ void UCGameInstance::CreateSession()
 	}
 }
 
-void UCGameInstance::Join(const FString& InAddress)
+void UCGameInstance::Join(uint32 Index)
 {
+	if (!SessionInterface.IsValid()) return;
+	if (!SessionSearch.IsValid()) return;
+
 	if (MainMenu)
 	{
-		MainMenu->SetServerList({ "Server1", "Server2" });
+		MainMenu->Shutdown();
 	}
 	
-	//if (MainMenu)
-	//{
-	//	MainMenu->Shutdown();
-	//}
-	//
-	//UEngine* Engine = GetEngine();
-	//if (!Engine) return;
-	//
-	//Engine->AddOnScreenDebugMessage(0, 10, FColor::Green,  FString::Printf(TEXT("Join to %s"), *InAddress));
-	//
-	//APlayerController* PC = GetFirstLocalPlayerController();
-	//if (!PC) return;
-	//
-	//PC->ClientTravel(InAddress, ETravelType::TRAVEL_Absolute);
+	SessionInterface->JoinSession(0, SESSION_NAME, SessionSearch->SearchResults[Index]);
 }
 
 void UCGameInstance::OpenMainMenuLevel()
@@ -189,4 +179,24 @@ void UCGameInstance::OnFindSessionsComplete(bool InSuccess)
 
 		UE_LOG(LogTemp, Warning, TEXT("Finished finding session"));
 	}
+}
+
+void UCGameInstance::OnJoinSessionComplete(FName InSessionName, EOnJoinSessionCompleteResult::Type InResult)
+{
+	if (SessionInterface.IsValid() == false) return;
+
+	FString Address;
+	if (!SessionInterface->GetResolvedConnectString(InSessionName, Address))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Could not convert IP address"));
+		return;
+	}
+
+	UEngine* Engine = GetEngine();
+	if (!Engine) return;
+	Engine->AddOnScreenDebugMessage(0, 5, FColor::Green, FString::Printf(TEXT("Joining to %s"), *Address));
+
+	APlayerController* PC = GetFirstLocalPlayerController();
+	if (PC == nullptr) return;
+	PC->ClientTravel(Address, ETravelType::TRAVEL_Absolute);
 }

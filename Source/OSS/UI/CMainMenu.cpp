@@ -63,17 +63,18 @@ void UCMainMenu::OpenJoinMenu()
 
 void UCMainMenu::JoinServer()
 {
-	if (SelectedIndex.IsSet())
+	if (SelectedIndex.IsSet() && OwningInstance)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Selected index is %d."), SelectedIndex.GetValue());
+
+		OwningInstance->Join(SelectedIndex.GetValue());
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Selected index is not set."));
 	}
 
-	if (!OwningInstance) return;
-	OwningInstance->Join("NotValid");
+	
 }
 
 void UCMainMenu::QuitGame()
