@@ -14,7 +14,8 @@ public class OSS : ModuleRules
 			"CoreUObject",
 			"Engine", 
 			"InputCore", 
-			"HeadMountedDisplay" 
+			"HeadMountedDisplay",
+			"UMG"
 		});
 	}
 }
