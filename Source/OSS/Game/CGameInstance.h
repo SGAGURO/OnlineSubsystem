@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "OnlineSubsystem.h"
 #include "Interfaces/CMenuInterface.h"
 #include "CGameInstance.generated.h"
 
@@ -34,8 +35,13 @@ public:
 	void OpenMainMenuLevel() override;
 
 private:
+	void OnCreateSessionComplete(FName InSessionName, bool InSuccess);
+
+private:
 	TSubclassOf<UUserWidget> MainMenuWidgetClass;
 	UCMainMenu* MainMenu;
 
 	TSubclassOf<UUserWidget> PauseMenuWidgetClass;
+
+	IOnlineSessionPtr SessionInterface;
 };

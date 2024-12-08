@@ -1,5 +1,6 @@
 #include "CGameInstance.h"
-#include "OnlineSubsystem.h"
+#include "Interfaces/OnlineSessionInterface.h"
+#include "OnlineSessionSettings.h"
 #include "UI/CMainMenu.h"
 #include "UI/CMenuBase.h"
 
@@ -27,10 +28,10 @@ void UCGameInstance::Init()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("OSS : %s is avaliable."), *OSS->GetSubsystemName().ToString());
 
-		IOnlineSessionPtr SessionInterface = OSS->GetSessionInterface();
+		SessionInterface = OSS->GetSessionInterface();
 		if (SessionInterface.IsValid())
 		{
-			UE_LOG(LogTemp, Warning, TEXT("SessionInterface is founded."));
+			SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UCGameInstance::OnCreateSessionComplete);
 		}
 	}
 	else
@@ -63,20 +64,11 @@ void UCGameInstance::LoadPauseMenu()
 
 void UCGameInstance::Host()
 {
-	if (MainMenu)
+	if (SessionInterface.IsValid())
 	{
-		MainMenu->Shutdown();
+		FOnlineSessionSettings SessionSettings;
+		SessionInterface->CreateSession(0, TEXT("GameSession"), SessionSettings);
 	}
-
-	UEngine* Engine = GetEngine();
-	if (!Engine) return;
-	
-	Engine->AddOnScreenDebugMessage(0, 2, FColor::Green, TEXT("Host"));
-
-	UWorld* World = GetWorld();
-	if (!World) return;
-
-	World->ServerTravel("/Game/Maps/Coop?listen");
 }
 
 void UCGameInstance::Join(const FString& InAddress)
@@ -103,4 +95,30 @@ void UCGameInstance::OpenMainMenuLevel()
 	if (!PC) return;
 
 	PC->ClientTravel("/Game/Maps/MainMenu", ETravelType::TRAVEL_Absolute);
+}
+
+void UCGameInstance::OnCreateSessionComplete(FName InSessionName, bool InSuccess)
+{
+	if (!InSuccess)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Could not create session"));
+		return;
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Session name is %s"), *InSessionName.ToString());
+
+	if (MainMenu)
+	{
+		MainMenu->Shutdown();
+	}
+
+	UEngine* Engine = GetEngine();
+	if (!Engine) return;
+
+	Engine->AddOnScreenDebugMessage(0, 2, FColor::Green, TEXT("Host"));
+
+	UWorld* World = GetWorld();
+	if (!World) return;
+
+	World->ServerTravel("/Game/Maps/Coop?listen");
 }
