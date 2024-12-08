@@ -6,6 +6,8 @@
 #include "CMainMenu.generated.h"
 
 class UButton;
+class UWidgetSwitcher;
+class UWidget;
 
 UCLASS()
 class OSS_API UCMainMenu : public UUserWidget
@@ -25,12 +27,37 @@ private:
 	UFUNCTION()
 	void HostServer();
 
+	UFUNCTION()
+	void OpenMainMenu();
+
+	UFUNCTION()
+	void OpenJoinMenu();
+
 private:
+	//Menu Switcher
+	UPROPERTY(meta = (BindWidget))
+	UWidgetSwitcher* MenuSwitcher;
+
+	UPROPERTY(meta = (BindWidget))
+	UWidget* MainMenu;
+
+	UPROPERTY(meta = (BindWidget))
+	UWidget* JoinMenu;
+
+	//Main Menu
 	UPROPERTY(meta = (BindWidget))
 	UButton* HostButton;
 
 	UPROPERTY(meta = (BindWidget))
 	UButton* JoinButton;
+
+	//Join Menu
+	UPROPERTY(meta = (BindWidget))
+	UButton* CancelJoinButton;
+	
+	UPROPERTY(meta = (BindWidget))
+	UButton* ConfirmJoinButton;
+
 	
 private:
 	ICMenuInterface* OwningInstance;

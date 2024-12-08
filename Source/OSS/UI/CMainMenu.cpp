@@ -1,13 +1,20 @@
 #include "CMainMenu.h"
 #include "Components/Button.h"
+#include "Components/WidgetSwitcher.h"
 
 bool UCMainMenu::Initialize()
 {
 	bool bSuccess = Super::Initialize();
 	if (!bSuccess) return false;
+	
 	if (!HostButton) return false;
-
 	HostButton->OnClicked.AddDynamic(this, &UCMainMenu::HostServer);
+
+	if (!JoinButton) return false;
+	JoinButton->OnClicked.AddDynamic(this, &UCMainMenu::OpenJoinMenu);
+
+	if (!CancelJoinButton) return false;
+	CancelJoinButton->OnClicked.AddDynamic(this, &UCMainMenu::OpenMainMenu);
 
 	return true;
 }
@@ -56,4 +63,18 @@ void UCMainMenu::Shutdown()
 void UCMainMenu::HostServer()
 {
 	OwningInstance->Host();
+}
+
+void UCMainMenu::OpenMainMenu()
+{
+	if (!MenuSwitcher) return;
+	if (!MainMenu) return;
+	MenuSwitcher->SetActiveWidget(MainMenu);
+}
+
+void UCMainMenu::OpenJoinMenu()
+{
+	if (!MenuSwitcher) return;
+	if (!JoinMenu) return;
+	MenuSwitcher->SetActiveWidget(JoinMenu);
 }
