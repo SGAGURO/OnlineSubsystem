@@ -16,6 +16,11 @@ void UCGameInstance::Host()
 	if (!Engine) return;
 	
 	Engine->AddOnScreenDebugMessage(0, 2, FColor::Green, TEXT("Host"));
+
+	UWorld* World = GetWorld();
+	if (!World) return;
+
+	World->ServerTravel("/Game/Maps/Coop?listen");
 }
 
 void UCGameInstance::Join(const FString& InAddress)
