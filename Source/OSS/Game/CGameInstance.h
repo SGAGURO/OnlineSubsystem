@@ -31,6 +31,8 @@ public:
 	UFUNCTION(Exec)
 	void Join(const FString& InAddress) override;
 
+	void OpenMainMenuLevel() override;
+
 private:
 	TSubclassOf<UUserWidget> MainMenuWidgetClass;
 	UCMainMenu* MainMenu;

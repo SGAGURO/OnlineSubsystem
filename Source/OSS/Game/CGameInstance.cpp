@@ -81,3 +81,11 @@ void UCGameInstance::Join(const FString& InAddress)
 
 	PC->ClientTravel(InAddress, ETravelType::TRAVEL_Absolute);
 }
+
+void UCGameInstance::OpenMainMenuLevel()
+{
+	APlayerController* PC = GetFirstLocalPlayerController();
+	if (!PC) return;
+
+	PC->ClientTravel("/Game/Maps/MainMenu", ETravelType::TRAVEL_Absolute);
+}

@@ -20,6 +20,9 @@ bool UCMainMenu::Initialize()
 	if (ConfirmJoinButton == nullptr) return false;
 	ConfirmJoinButton->OnClicked.AddDynamic(this, &UCMainMenu::JoinServer);
 
+	if (QuitButton == nullptr) return false;
+	QuitButton->OnClicked.AddDynamic(this, &UCMainMenu::QuitGame);
+
 	return true;
 }
 
@@ -53,4 +56,15 @@ void UCMainMenu::JoinServer()
 		IPAddressField->GetText().ToString();
 
 	OwningInstance->Join(Address);
+}
+
+void UCMainMenu::QuitGame()
+{
+	UWorld* World = GetWorld();
+	if (!World) return;
+
+	APlayerController* PC = World->GetFirstPlayerController();
+	if (!PC) return;
+
+	PC->ConsoleCommand("quit");
 }
