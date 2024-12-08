@@ -1,6 +1,7 @@
 #include "CMainMenu.h"
 #include "Components/Button.h"
 #include "Components/WidgetSwitcher.h"
+#include "Components/TextBlock.h"
 #include "CServerRow.h"
 
 UCMainMenu::UCMainMenu()
@@ -53,22 +54,18 @@ void UCMainMenu::OpenJoinMenu()
 	if (!MenuSwitcher) return;
 	if (!JoinMenu) return;
 	MenuSwitcher->SetActiveWidget(JoinMenu);
+
+	if (OwningInstance)
+	{
+		OwningInstance->RefreshServerList();
+	}
 }
 
 void UCMainMenu::JoinServer()
 {
 	if (!OwningInstance) return;
-	
-	UWorld* World =  GetWorld();
-	if (!World) return;
-	
-	UCServerRow* ServerRow = CreateWidget<UCServerRow>(World, ServerRowClass);
-	if (!ServerRow) return;
 
-	if (!ServerList) return;
-	ServerList->AddChild(ServerRow);
-
-	//OwningInstance->Join(Address);
+	OwningInstance->Join("NotValid");
 }
 
 void UCMainMenu::QuitGame()
@@ -80,4 +77,24 @@ void UCMainMenu::QuitGame()
 	if (!PC) return;
 
 	PC->ConsoleCommand("quit");
+}
+
+void UCMainMenu::SetServerList(TArray<FString> InServerNames)
+{
+	UWorld* World = GetWorld();
+	if (!World) return;
+
+	if (!ServerList) return;
+	ServerList->ClearChildren();
+
+	for (const FString& ServerName : InServerNames)
+	{
+		UCServerRow* ServerRow = CreateWidget<UCServerRow>(World, ServerRowClass);
+		if (!ServerRow) return;
+
+		ServerRow->ServerName->SetText(FText::FromString(ServerName));
+
+		ServerList->AddChild(ServerRow);
+	}
+
 }

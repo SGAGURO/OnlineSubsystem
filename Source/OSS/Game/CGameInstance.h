@@ -34,6 +34,7 @@ public:
 	void Join(const FString& InAddress) override;
 
 	void OpenMainMenuLevel() override;
+	void RefreshServerList() override;
 
 private:
 	void OnCreateSessionComplete(FName InSessionName, bool InSuccess);

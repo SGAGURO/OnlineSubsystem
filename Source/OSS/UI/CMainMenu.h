@@ -36,6 +36,9 @@ private:
 	UFUNCTION()
 	void QuitGame();
 
+public:
+	void SetServerList(TArray<FString> InServerNames);
+
 private:
 	//Menu Switcher
 	UPROPERTY(meta = (BindWidget))
