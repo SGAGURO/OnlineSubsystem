@@ -36,6 +36,9 @@ public:
 
 private:
 	void OnCreateSessionComplete(FName InSessionName, bool InSuccess);
+	void OnDestroySessionComplete(FName InSessionName, bool InSuccess);
+
+	void CreateSession();
 
 private:
 	TSubclassOf<UUserWidget> MainMenuWidgetClass;

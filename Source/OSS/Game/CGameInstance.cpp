@@ -4,6 +4,8 @@
 #include "UI/CMainMenu.h"
 #include "UI/CMenuBase.h"
 
+const static FName SESSION_NAME = TEXT("GameSession");
+
 UCGameInstance::UCGameInstance()
 {
 	ConstructorHelpers::FClassFinder<UUserWidget> MainMenuWidgetClass_Asset(TEXT("/Game/UI/WB_MainMenu"));
@@ -32,6 +34,7 @@ void UCGameInstance::Init()
 		if (SessionInterface.IsValid())
 		{
 			SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UCGameInstance::OnCreateSessionComplete);
+			SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &UCGameInstance::OnDestroySessionComplete);
 		}
 	}
 	else
@@ -66,8 +69,25 @@ void UCGameInstance::Host()
 {
 	if (SessionInterface.IsValid())
 	{
+		auto AlreadyExsistingSession = SessionInterface->GetNamedSession(SESSION_NAME);
+		if (AlreadyExsistingSession)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("%s is already exsist. re-create session."), *SESSION_NAME.ToString());
+			SessionInterface->DestroySession(SESSION_NAME);
+		}
+		else
+		{
+			CreateSession();
+		}
+	}
+}
+
+void UCGameInstance::CreateSession()
+{
+	if (SessionInterface.IsValid())
+	{
 		FOnlineSessionSettings SessionSettings;
-		SessionInterface->CreateSession(0, TEXT("GameSession"), SessionSettings);
+		SessionInterface->CreateSession(0, SESSION_NAME, SessionSettings);
 	}
 }
 
@@ -121,4 +141,12 @@ void UCGameInstance::OnCreateSessionComplete(FName InSessionName, bool InSuccess
 	if (!World) return;
 
 	World->ServerTravel("/Game/Maps/Coop?listen");
+}
+
+void UCGameInstance::OnDestroySessionComplete(FName InSessionName, bool InSuccess)
+{
+	if (InSuccess == true)
+	{
+		CreateSession();
+	}
 }
