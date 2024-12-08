@@ -63,8 +63,16 @@ void UCMainMenu::OpenJoinMenu()
 
 void UCMainMenu::JoinServer()
 {
-	if (!OwningInstance) return;
+	if (SelectedIndex.IsSet())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Selected index is %d."), SelectedIndex.GetValue());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Selected index is not set."));
+	}
 
+	if (!OwningInstance) return;
 	OwningInstance->Join("NotValid");
 }
 
@@ -87,14 +95,21 @@ void UCMainMenu::SetServerList(TArray<FString> InServerNames)
 	if (!ServerList) return;
 	ServerList->ClearChildren();
 
+	uint32 i = 0;
 	for (const FString& ServerName : InServerNames)
 	{
 		UCServerRow* ServerRow = CreateWidget<UCServerRow>(World, ServerRowClass);
 		if (!ServerRow) return;
 
 		ServerRow->ServerName->SetText(FText::FromString(ServerName));
+		ServerRow->Setup(this, i++);
 
 		ServerList->AddChild(ServerRow);
 	}
 
+}
+
+void UCMainMenu::SetSelectedIndex(uint32 InIndex)
+{
+	SelectedIndex = InIndex;
 }

@@ -38,6 +38,7 @@ private:
 
 public:
 	void SetServerList(TArray<FString> InServerNames);
+	void SetSelectedIndex(uint32 InIndex);
 
 private:
 	//Menu Switcher
@@ -71,4 +72,7 @@ private:
 	
 	UPROPERTY(meta = (BindWidget))
 	UButton* ConfirmJoinButton;
+
+private:
+	TOptional<uint32> SelectedIndex;
 };
