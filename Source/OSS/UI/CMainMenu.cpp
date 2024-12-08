@@ -1,7 +1,17 @@
 #include "CMainMenu.h"
 #include "Components/Button.h"
 #include "Components/WidgetSwitcher.h"
-#include "Components/EditableTextBox.h"
+#include "CServerRow.h"
+
+UCMainMenu::UCMainMenu()
+{
+	ConstructorHelpers::FClassFinder<UUserWidget> ServerRowClass_Asset(TEXT("/Game/UI/WB_ServerRow"));
+	if (ServerRowClass_Asset.Succeeded())
+	{
+		ServerRowClass = ServerRowClass_Asset.Class;
+	}
+}
+
 
 bool UCMainMenu::Initialize()
 {
@@ -49,13 +59,16 @@ void UCMainMenu::JoinServer()
 {
 	if (!OwningInstance) return;
 	
-	if (!IPAddressField) return;
+	UWorld* World =  GetWorld();
+	if (!World) return;
+	
+	UCServerRow* ServerRow = CreateWidget<UCServerRow>(World, ServerRowClass);
+	if (!ServerRow) return;
 
-	const FString& Address = IPAddressField->GetText().IsEmpty() ? 
-		"127.0.0.1" : 
-		IPAddressField->GetText().ToString();
+	if (!ServerList) return;
+	ServerList->AddChild(ServerRow);
 
-	OwningInstance->Join(Address);
+	//OwningInstance->Join(Address);
 }
 
 void UCMainMenu::QuitGame()

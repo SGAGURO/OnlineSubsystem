@@ -7,12 +7,15 @@
 class UButton;
 class UWidgetSwitcher;
 class UWidget;
-class UEditableTextBox;
+class UPanelWidget;
 
 UCLASS()
 class OSS_API UCMainMenu : public UCMenuBase
 {
 	GENERATED_BODY()
+
+public:
+	UCMainMenu();
 
 protected:
 	virtual bool Initialize() override;
@@ -56,7 +59,9 @@ private:
 
 	//Join Menu
 	UPROPERTY(meta = (BindWidget))
-	UEditableTextBox* IPAddressField;
+	UPanelWidget* ServerList;
+
+	TSubclassOf<UUserWidget> ServerRowClass;
 
 	UPROPERTY(meta = (BindWidget))
 	UButton* CancelJoinButton;
