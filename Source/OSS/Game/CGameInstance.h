@@ -26,7 +26,7 @@ public:
 	void Host() override;
 
 	UFUNCTION(Exec)
-	void Join(const FString& InAddress = "127.0.0.1");
+	void Join(const FString& InAddress) override;
 
 private:
 	TSubclassOf<UUserWidget> MainMenuWidgetClass;

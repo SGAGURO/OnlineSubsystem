@@ -8,6 +8,7 @@
 class UButton;
 class UWidgetSwitcher;
 class UWidget;
+class UEditableTextBox;
 
 UCLASS()
 class OSS_API UCMainMenu : public UUserWidget
@@ -33,6 +34,9 @@ private:
 	UFUNCTION()
 	void OpenJoinMenu();
 
+	UFUNCTION()
+	void JoinServer();
+
 private:
 	//Menu Switcher
 	UPROPERTY(meta = (BindWidget))
@@ -52,6 +56,9 @@ private:
 	UButton* JoinButton;
 
 	//Join Menu
+	UPROPERTY(meta = (BindWidget))
+	UEditableTextBox* IPAddressField;
+
 	UPROPERTY(meta = (BindWidget))
 	UButton* CancelJoinButton;
 	
