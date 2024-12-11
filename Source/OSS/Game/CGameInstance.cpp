@@ -88,7 +88,15 @@ void UCGameInstance::CreateSession()
 	if (SessionInterface.IsValid())
 	{
 		FOnlineSessionSettings SessionSettings;
-		SessionSettings.bIsLANMatch = false;
+
+		if (IOnlineSubsystem::Get()->GetSubsystemName() == "NULL")
+		{
+			SessionSettings.bIsLANMatch = true;
+		}
+		else
+		{
+			SessionSettings.bIsLANMatch = false;
+		}
 		SessionSettings.NumPublicConnections = 5;
 		SessionSettings.bShouldAdvertise = true;
 		SessionSettings.bUsesPresence = true;
@@ -171,9 +179,6 @@ void UCGameInstance::OnFindSessionsComplete(bool InSuccess)
 	if (InSuccess && SessionSearch.IsValid() && MainMenu)
 	{
 		TArray<FString> ServerNames;
-		ServerNames.Add("TestLobby1");
-		ServerNames.Add("TestLobby2");
-		ServerNames.Add("TestLobby3");
 		for (const FOnlineSessionSearchResult& SearchResult : SessionSearch->SearchResults)
 		{
 			UE_LOG(LogTemp, Display, TEXT("Found session name: %s"), *SearchResult.GetSessionIdStr());
