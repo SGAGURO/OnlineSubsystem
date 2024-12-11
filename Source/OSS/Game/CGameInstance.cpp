@@ -178,13 +178,19 @@ void UCGameInstance::OnFindSessionsComplete(bool InSuccess)
 {
 	if (InSuccess && SessionSearch.IsValid() && MainMenu)
 	{
-		TArray<FString> ServerNames;
+		TArray<FServerData> ServerNames;
 		for (const FOnlineSessionSearchResult& SearchResult : SessionSearch->SearchResults)
 		{
 			UE_LOG(LogTemp, Display, TEXT("Found session name: %s"), *SearchResult.GetSessionIdStr());
 			UE_LOG(LogTemp, Display, TEXT("Ping : %d"), SearchResult.PingInMs);
 
-			ServerNames.Add(SearchResult.GetSessionIdStr());
+			FServerData ServerData;
+			ServerData.Name = SearchResult.GetSessionIdStr();
+			ServerData.MaxPlayers = SearchResult.Session.SessionSettings.NumPublicConnections;
+			ServerData.CurrentPlayers = ServerData.MaxPlayers - SearchResult.Session.NumOpenPublicConnections;
+			ServerData.HostUserName = SearchResult.Session.OwningUserName;
+
+			ServerNames.Add(ServerData);
 		}
 		MainMenu->SetServerList(ServerNames);
 

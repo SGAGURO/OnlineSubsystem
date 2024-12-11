@@ -24,6 +24,12 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* ServerName;
 
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* HostUser;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* ConnectionFraction;
+
 	UPROPERTY(BlueprintReadOnly)
 	bool bSelected;
 

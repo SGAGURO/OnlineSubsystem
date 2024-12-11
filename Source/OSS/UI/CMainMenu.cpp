@@ -88,7 +88,7 @@ void UCMainMenu::QuitGame()
 	PC->ConsoleCommand("quit");
 }
 
-void UCMainMenu::SetServerList(TArray<FString> InServerNames)
+void UCMainMenu::SetServerList(TArray<FServerData> InServerDatas)
 {
 	UWorld* World = GetWorld();
 	if (!World) return;
@@ -97,12 +97,17 @@ void UCMainMenu::SetServerList(TArray<FString> InServerNames)
 	ServerList->ClearChildren();
 
 	uint32 i = 0;
-	for (const FString& ServerName : InServerNames)
+	for (const FServerData& ServerData : InServerDatas)
 	{
 		UCServerRow* ServerRow = CreateWidget<UCServerRow>(World, ServerRowClass);
 		if (!ServerRow) return;
 
-		ServerRow->ServerName->SetText(FText::FromString(ServerName));
+		ServerRow->ServerName->SetText(FText::FromString(ServerData.Name));
+		ServerRow->HostUser->SetText(FText::FromString(ServerData.HostUserName));
+		
+		FString FractionText = FString::Printf(TEXT("%d/%d"), ServerData.CurrentPlayers, ServerData.MaxPlayers);
+		ServerRow->ConnectionFraction->SetText(FText::FromString(FractionText));
+
 		ServerRow->Setup(this, i++);
 
 		ServerList->AddChild(ServerRow);

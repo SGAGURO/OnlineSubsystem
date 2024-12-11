@@ -9,6 +9,18 @@ class UWidgetSwitcher;
 class UWidget;
 class UPanelWidget;
 
+USTRUCT()
+struct FServerData
+{
+	GENERATED_BODY()
+
+public:
+	FString Name;
+	uint16 CurrentPlayers;
+	uint16 MaxPlayers;
+	FString HostUserName;
+};
+
 UCLASS()
 class OSS_API UCMainMenu : public UCMenuBase
 {
@@ -37,7 +49,7 @@ private:
 	void QuitGame();
 
 public:
-	void SetServerList(TArray<FString> InServerNames);
+	void SetServerList(TArray<FServerData> InServerDatas);
 	void SetSelectedIndex(uint32 InIndex);
 
 private:
