@@ -24,6 +24,9 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* ServerName;
 
+	UPROPERTY(BlueprintReadOnly)
+	bool bSelected;
+
 private:
 	UPROPERTY(meta = (BindWidget))
 	UButton* RowButton;

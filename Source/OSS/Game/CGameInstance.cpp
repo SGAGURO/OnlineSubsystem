@@ -171,6 +171,9 @@ void UCGameInstance::OnFindSessionsComplete(bool InSuccess)
 	if (InSuccess && SessionSearch.IsValid() && MainMenu)
 	{
 		TArray<FString> ServerNames;
+		ServerNames.Add("TestLobby1");
+		ServerNames.Add("TestLobby2");
+		ServerNames.Add("TestLobby3");
 		for (const FOnlineSessionSearchResult& SearchResult : SessionSearch->SearchResults)
 		{
 			UE_LOG(LogTemp, Display, TEXT("Found session name: %s"), *SearchResult.GetSessionIdStr());

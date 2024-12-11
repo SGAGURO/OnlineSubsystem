@@ -113,4 +113,13 @@ void UCMainMenu::SetServerList(TArray<FString> InServerNames)
 void UCMainMenu::SetSelectedIndex(uint32 InIndex)
 {
 	SelectedIndex = InIndex;
+
+	for (int32 i = 0; i < ServerList->GetChildrenCount(); i++)
+	{
+		auto serverRow = Cast<UCServerRow>(ServerList->GetChildAt(i));
+		if (serverRow)
+		{
+			serverRow->bSelected = (SelectedIndex.IsSet() && SelectedIndex.GetValue() == i);
+		}
+	}
 }
