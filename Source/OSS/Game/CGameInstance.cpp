@@ -167,7 +167,7 @@ void UCGameInstance::OnCreateSessionComplete(FName InSessionName, bool InSuccess
 	UWorld* World = GetWorld();
 	if (!World) return;
 
-	World->ServerTravel("/Game/Maps/Coop?listen");
+	World->ServerTravel("/Game/Maps/Lobby?listen");
 }
 
 void UCGameInstance::OnDestroySessionComplete(FName InSessionName, bool InSuccess)
