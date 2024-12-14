@@ -43,6 +43,11 @@ void UCGameInstance::Init()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Not found subsystem."));
 	}
+
+	if (GEngine)
+	{
+		GEngine->OnNetworkFailure().AddUObject(this, &UCGameInstance::OnNetworkFailure);
+	}
 }
 
 void UCGameInstance::LoadMainMenu()
@@ -100,12 +105,20 @@ void UCGameInstance::CreateSession()
 		{
 			SessionSettings.bIsLANMatch = false;
 		}
-		SessionSettings.NumPublicConnections = 5;
+		SessionSettings.NumPublicConnections = 4;
 		SessionSettings.bShouldAdvertise = true;
 		SessionSettings.bUsesPresence = true;
 		SessionSettings.Set(SESSION_SETTINGS_KEY, DesiredServerName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 
 		SessionInterface->CreateSession(0, SESSION_NAME, SessionSettings);
+	}
+}
+
+void UCGameInstance::StartSession()
+{
+	if (SessionInterface.IsValid())
+	{
+		SessionInterface->StartSession(SESSION_NAME);
 	}
 }
 
@@ -230,4 +243,11 @@ void UCGameInstance::OnJoinSessionComplete(FName InSessionName, EOnJoinSessionCo
 	APlayerController* PC = GetFirstLocalPlayerController();
 	if (PC == nullptr) return;
 	PC->ClientTravel(Address, ETravelType::TRAVEL_Absolute);
+}
+
+void UCGameInstance::OnNetworkFailure(UWorld* World, UNetDriver* NetDriver, ENetworkFailure::Type FailureType, const FString& ErrorString)
+{
+	UE_LOG(LogTemp, Error, TEXT("%s"), *ErrorString);
+
+	OpenMainMenuLevel();
 }

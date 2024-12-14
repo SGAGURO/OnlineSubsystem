@@ -34,6 +34,8 @@ public:
 	UFUNCTION(Exec)
 	void Join(uint32 Index) override;
 
+	void StartSession();
+
 	void OpenMainMenuLevel() override;
 	void RefreshServerList() override;
 
@@ -42,6 +44,7 @@ private:
 	void OnDestroySessionComplete(FName InSessionName, bool InSuccess);
 	void OnFindSessionsComplete(bool InSuccess);
 	void OnJoinSessionComplete(FName InSessionName, EOnJoinSessionCompleteResult::Type InResult);
+	void OnNetworkFailure(UWorld* World, UNetDriver* NetDriver, ENetworkFailure::Type FailureType, const FString& ErrorString);
 
 	void CreateSession();
 
