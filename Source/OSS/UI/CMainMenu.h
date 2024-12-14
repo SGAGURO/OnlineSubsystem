@@ -8,6 +8,7 @@ class UButton;
 class UWidgetSwitcher;
 class UWidget;
 class UPanelWidget;
+class UEditableTextBox;
 
 USTRUCT()
 struct FServerData
@@ -41,6 +42,9 @@ private:
 
 	UFUNCTION()
 	void OpenJoinMenu();
+
+	UFUNCTION()
+	void OpenHostMenu();
 
 	UFUNCTION()
 	void JoinServer();
@@ -84,6 +88,19 @@ private:
 	
 	UPROPERTY(meta = (BindWidget))
 	UButton* ConfirmJoinButton;
+
+	//Host Menu
+	UPROPERTY(meta = (BindWidget))
+	UWidget* HostMenu;
+
+	UPROPERTY(meta = (BindWidget))
+	UEditableTextBox* ServerHostName;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* CancelHostButton;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* ConfirmHostButton;
 
 private:
 	TOptional<uint32> SelectedIndex;

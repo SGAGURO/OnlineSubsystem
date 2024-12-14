@@ -2,6 +2,7 @@
 #include "Components/Button.h"
 #include "Components/WidgetSwitcher.h"
 #include "Components/TextBlock.h"
+#include "Components/EditableTextBox.h"
 #include "CServerRow.h"
 
 UCMainMenu::UCMainMenu()
@@ -19,27 +20,37 @@ bool UCMainMenu::Initialize()
 	bool bSuccess = Super::Initialize();
 	if (!bSuccess) return false;
 	
+	//Main Menu
 	if (!HostButton) return false;
-	HostButton->OnClicked.AddDynamic(this, &UCMainMenu::HostServer);
+	HostButton->OnClicked.AddDynamic(this, &UCMainMenu::OpenHostMenu);
 
 	if (!JoinButton) return false;
 	JoinButton->OnClicked.AddDynamic(this, &UCMainMenu::OpenJoinMenu);
 
+	if (QuitButton == nullptr) return false;
+	QuitButton->OnClicked.AddDynamic(this, &UCMainMenu::QuitGame);
+
+	//Join Menu
 	if (!CancelJoinButton) return false;
 	CancelJoinButton->OnClicked.AddDynamic(this, &UCMainMenu::OpenMainMenu);
 
 	if (ConfirmJoinButton == nullptr) return false;
 	ConfirmJoinButton->OnClicked.AddDynamic(this, &UCMainMenu::JoinServer);
 
-	if (QuitButton == nullptr) return false;
-	QuitButton->OnClicked.AddDynamic(this, &UCMainMenu::QuitGame);
+	//Host Menu
+	if (CancelHostButton == nullptr) return false;
+	CancelHostButton->OnClicked.AddDynamic(this, &UCMainMenu::OpenMainMenu);
+
+	if (ConfirmHostButton == nullptr) return false;
+	ConfirmHostButton->OnClicked.AddDynamic(this, &UCMainMenu::HostServer);
 
 	return true;
 }
 
 void UCMainMenu::HostServer()
 {
-	OwningInstance->Host();
+	FString ServerName = ServerHostName->Text.ToString();
+	OwningInstance->Host(ServerName);
 }
 
 void UCMainMenu::OpenMainMenu()
@@ -61,6 +72,13 @@ void UCMainMenu::OpenJoinMenu()
 	}
 }
 
+void UCMainMenu::OpenHostMenu()
+{
+	if (!MenuSwitcher) return;
+	if (!MainMenu) return;
+	MenuSwitcher->SetActiveWidget(HostMenu);
+}
+
 void UCMainMenu::JoinServer()
 {
 	if (SelectedIndex.IsSet() && OwningInstance)
@@ -73,8 +91,6 @@ void UCMainMenu::JoinServer()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Selected index is not set."));
 	}
-
-	
 }
 
 void UCMainMenu::QuitGame()

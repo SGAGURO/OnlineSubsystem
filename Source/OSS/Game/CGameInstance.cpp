@@ -4,6 +4,7 @@
 #include "UI/CMenuBase.h"
 
 const static FName SESSION_NAME = TEXT("GameSession");
+const static FName SESSION_SETTINGS_KEY = TEXT("SGA");
 
 UCGameInstance::UCGameInstance()
 {
@@ -66,8 +67,10 @@ void UCGameInstance::LoadPauseMenu()
 	PauseMenu->Startup();
 }
 
-void UCGameInstance::Host()
+void UCGameInstance::Host(FString ServerName)
 {
+	DesiredServerName = ServerName;
+
 	if (SessionInterface.IsValid())
 	{
 		auto AlreadyExsistingSession = SessionInterface->GetNamedSession(SESSION_NAME);
@@ -100,6 +103,7 @@ void UCGameInstance::CreateSession()
 		SessionSettings.NumPublicConnections = 5;
 		SessionSettings.bShouldAdvertise = true;
 		SessionSettings.bUsesPresence = true;
+		SessionSettings.Set(SESSION_SETTINGS_KEY, DesiredServerName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 
 		SessionInterface->CreateSession(0, SESSION_NAME, SessionSettings);
 	}
@@ -185,10 +189,20 @@ void UCGameInstance::OnFindSessionsComplete(bool InSuccess)
 			UE_LOG(LogTemp, Display, TEXT("Ping : %d"), SearchResult.PingInMs);
 
 			FServerData ServerData;
-			ServerData.Name = SearchResult.GetSessionIdStr();
+			
 			ServerData.MaxPlayers = SearchResult.Session.SessionSettings.NumPublicConnections;
 			ServerData.CurrentPlayers = ServerData.MaxPlayers - SearchResult.Session.NumOpenPublicConnections;
 			ServerData.HostUserName = SearchResult.Session.OwningUserName;
+
+			FString ServerName;
+			if (SearchResult.Session.SessionSettings.Get(SESSION_SETTINGS_KEY, ServerName))
+			{
+				ServerData.Name = ServerName;
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Session(Lobby) Name Not Found"));
+			}
 
 			ServerNames.Add(ServerData);
 		}

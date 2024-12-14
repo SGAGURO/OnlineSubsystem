@@ -16,7 +16,7 @@ class OSS_API ICMenuInterface
 	GENERATED_BODY()
 
 public:
-	virtual void Host() = 0;
+	virtual void Host(FString ServerName) = 0;
 	virtual void Join(uint32 Index) = 0;
 	virtual void OpenMainMenuLevel() = 0;
 	virtual void RefreshServerList() = 0;
